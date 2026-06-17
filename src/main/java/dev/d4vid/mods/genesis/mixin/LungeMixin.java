@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.time.Duration;
+
 @SuppressWarnings("unused")
 @Mixin(Enchantment.class)
 public class LungeMixin {
@@ -25,9 +27,17 @@ public class LungeMixin {
         }
 
         ItemStack stack = item.itemStack();
+        Duration duration = cooldown.apply(player);
 
-        if (cooldown.apply(player)) {
-            info.cancel();
+        if (duration != null) {
+            float tickRate = serverLevel.getServer().tickRateManager().tickrate();
+            System.out.println(player.getCooldowns().getCooldownGroup(stack));
+
+            player.getCooldowns().addCooldown(stack, (int) (duration.toSeconds() * tickRate));
+
+            return;
         }
+
+        info.cancel();
     }
 }
