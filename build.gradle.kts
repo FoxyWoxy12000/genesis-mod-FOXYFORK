@@ -33,18 +33,18 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-
-  withSourcesJar()
 }
 
 tasks.processResources {
     filesMatching("*.json") {
-        expand(mapOf(
-            "name" to rootProject.name,
-            "description" to project.description,
-            "version" to project.version,
-            "group" to project.group,
-        ))
+        expand(
+            mapOf(
+                "name" to rootProject.name,
+                "description" to project.description,
+                "version" to project.version,
+                "group" to project.group,
+            )
+        )
     }
 }
 
@@ -52,4 +52,8 @@ tasks.jar {
     from("LICENSE") {
         rename { "${it}_${rootProject.name}" }
     }
+}
+
+tasks.remapJar {
+    archiveFileName = "${rootProject.name}.jar"
 }

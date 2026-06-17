@@ -1,0 +1,68 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  artifact:
+    name: Upload Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: GenesisMod
+          path: ./build/libs/GenesisMod.jar
+
+  release:
+    name: Draft Release
+    runs-on: ubuntu-latest
+    needs: artifact
+    if: ${{ github.ref_type == 'tag' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Download archives
+        uses: actions/download-artifact@v7
+        with:
+          name: GenesisMod
+
+      - name: Archive
+        shell: bash
+        run: |
+          version="${{ github.ref_name }}"
+
+          pushd ./GenesisMod
+          zip "../GenesisMod-$version.zip" "GenesisMod.jar"
+          popd
+
+      - name: Draft release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          draft: true
+          files: |
+            ./*.zip
