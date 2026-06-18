@@ -1,6 +1,7 @@
 package dev.d4vid.mods.genesis.server
 
-import dev.d4vid.mods.genesis.server.combat.manageFriendlyTeams
+import dev.d4vid.mods.genesis.server.combat.registerFriendlyTeamManager
+import dev.d4vid.mods.genesis.server.combat.registerInCombatDetector
 import net.fabricmc.api.DedicatedServerModInitializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -12,7 +13,8 @@ object Genesis : DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
         registerCommand()
-        manageFriendlyTeams()
+        registerFriendlyTeamManager()
+        registerInCombatDetector()
 
         GenesisConfig.loadFile()
     }

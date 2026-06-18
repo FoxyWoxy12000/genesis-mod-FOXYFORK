@@ -5,6 +5,18 @@
     "peaceful"
   ],
   "cooldowns": {
-    "spear_lunge": 5.0
+    "spear_lunge": {
+      "duration": 5.0,
+      "combatOnly": true
+    }
+  },
+  "combatDetection": {
+    "minDamage": 1.0,
+    "damageScaling": 10.0,
+    "maxTimer": 30.0,
+    "combatLog": true,
+    "disableItems": [
+      "minecraft:ender_pearl"
+    ]
   }
 }

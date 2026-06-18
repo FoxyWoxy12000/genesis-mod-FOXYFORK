@@ -5,6 +5,8 @@
   "server": [
     "cooldown.EnchantmentMixin",
     "cooldown.ItemCooldownsMixin",
+    "event.EntityMixin",
+    "event.ServerPlayerGameModeMixin",
     "portals.BaseFireBlockMixin",
     "portals.EnderEyeItemMixin",
     "portals.EndPortalBlockMixin",

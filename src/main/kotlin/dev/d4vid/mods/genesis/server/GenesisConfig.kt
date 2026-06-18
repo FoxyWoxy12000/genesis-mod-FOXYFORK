@@ -2,14 +2,39 @@ package dev.d4vid.mods.genesis.server
 
 import dev.d4vid.mods.genesis.server.Genesis.logger
 import dev.d4vid.mods.genesis.server.cooldown.CooldownType
-import dev.d4vid.mods.genesis.server.serialization.CooldownsSerializer
+import dev.d4vid.mods.genesis.server.serialization.DurationSecondsSerializer
+import dev.d4vid.mods.genesis.server.serialization.EnumMapSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.item.Item
 import net.minecraft.world.scores.Team
 import java.io.File
 import java.nio.file.Files
 import java.time.Duration
 import java.util.*
+
+private object CooldownsSerializer : EnumMapSerializer<CooldownType, CooldownData>(
+    CooldownType::class.java,
+    CooldownType.serializer(),
+    CooldownData.serializer()
+)
+
+@Serializable
+private data class CooldownData(
+    @Serializable(with = DurationSecondsSerializer::class)
+    val duration: Duration,
+    val combatOnly: Boolean,
+)
+
+@Serializable
+private data class CombatDetectionData(
+    val minDamage: Double,
+    val damageScaling: Double,
+    val maxTimer: Double,
+    val combatLog: Boolean,
+    val disableItems: Set<String>,
+)
 
 @Serializable
 private data class ConfigData(
@@ -17,7 +42,8 @@ private data class ConfigData(
     val disableEnd: Boolean,
     val friendlyTeams: Set<String>,
     @Serializable(with = CooldownsSerializer::class)
-    val cooldowns: EnumMap<CooldownType, Duration>,
+    val cooldowns: EnumMap<CooldownType, CooldownData>,
+    val combatDetection: CombatDetectionData,
 )
 
 object GenesisConfig {
@@ -29,6 +55,13 @@ object GenesisConfig {
         disableEnd = false,
         friendlyTeams = setOf(),
         cooldowns = EnumMap(CooldownType::class.java),
+        combatDetection = CombatDetectionData(
+            minDamage = 1.0,
+            damageScaling = 10.0,
+            maxTimer = 30.0,
+            combatLog = true,
+            disableItems = setOf(),
+        ),
     )
 
     fun loadFile() {
@@ -62,10 +95,37 @@ object GenesisConfig {
     }
 
     fun isTeamFriendly(team: Team): Boolean {
+        println(team.name)
         return data.friendlyTeams.contains(team.name)
     }
 
     fun getCooldownDuration(type: CooldownType): Duration {
-        return data.cooldowns[type] ?: Duration.ofMillis(0)
+        return data.cooldowns[type]?.duration ?: Duration.ofMillis(0)
+    }
+
+    fun isCooldownCombatOnly(type: CooldownType): Boolean {
+        return data.cooldowns[type]?.combatOnly ?: false
+    }
+
+    fun getCombatDetectionMinDamage(): Double {
+        return data.combatDetection.minDamage
+    }
+
+    fun getCombatDetectionDamageScaling(): Double {
+        return data.combatDetection.damageScaling
+    }
+
+    fun getCombatDetectionMaxTimer(): Double {
+        return data.combatDetection.maxTimer
+    }
+
+    fun isCombatLogEnabled(): Boolean {
+        return data.combatDetection.combatLog
+    }
+
+    fun isItemDisabledInCombat(item: Item): Boolean {
+        val id = BuiltInRegistries.ITEM.getKey(item).toString()
+        println(id)
+        return data.combatDetection.disableItems.contains(id)
     }
 }

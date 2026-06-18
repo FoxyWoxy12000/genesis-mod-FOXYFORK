@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 
-fun manageFriendlyTeams() {
+fun registerFriendlyTeamManager() {
     AttackEntityCallback.EVENT.register { player, _, _, entity, _ ->
         if (entity !is Player) {
-            InteractionResult.PASS
+            return@register InteractionResult.PASS
         }
 
         val teams = arrayOf(player.team, entity.team)
@@ -18,6 +18,5 @@ fun manageFriendlyTeams() {
         } else {
             InteractionResult.PASS
         }
-
     }
 }
