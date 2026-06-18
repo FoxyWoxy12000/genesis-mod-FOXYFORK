@@ -1,4 +1,4 @@
-package dev.d4vid.mods.genesis.mixin;
+package dev.d4vid.mods.genesis.server.mixin.cooldown;
 
 import dev.d4vid.mods.genesis.server.cooldown.CooldownManager;
 import dev.d4vid.mods.genesis.server.cooldown.CooldownType;
@@ -32,7 +32,6 @@ public class EnchantmentMixin {
 
         if (duration != null) {
             float tickRate = serverLevel.getServer().tickRateManager().tickrate();
-
             player.getCooldowns().addCooldown(stack, (int) (duration.toSeconds() * tickRate));
 
             return;

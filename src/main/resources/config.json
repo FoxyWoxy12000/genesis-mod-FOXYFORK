@@ -1,7 +1,7 @@
 {
+  "disableNether": true,
+  "disableEnd": true,
   "cooldowns": {
     "spear_lunge": 5.0
-  },
-  "disableNether": true,
-  "disableEnd": true
+  }
 }

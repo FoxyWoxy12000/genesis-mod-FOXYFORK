@@ -1,4 +1,4 @@
-package dev.d4vid.mods.genesis.mixin;
+package dev.d4vid.mods.genesis.server.mixin.cooldown;
 
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemCooldowns;

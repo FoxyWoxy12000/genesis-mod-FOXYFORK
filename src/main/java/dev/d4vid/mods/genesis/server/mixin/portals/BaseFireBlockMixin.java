@@ -1,4 +1,4 @@
-package dev.d4vid.mods.genesis.mixin;
+package dev.d4vid.mods.genesis.server.mixin.portals;
 
 import dev.d4vid.mods.genesis.server.GenesisConfig;
 import net.minecraft.world.level.Level;

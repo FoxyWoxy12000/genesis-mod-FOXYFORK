@@ -1,14 +1,14 @@
 {
   "required": true,
-  "package": "${group}.mixin",
+  "package": "${group}.server.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "BaseFireBlockMixin",
-    "EnchantmentMixin",
-    "EndPortalBlockMixin",
-    "ItemCooldownsMixin",
-    "NetherPortalBlockMixin",
-    "ServerPlayerGameModeMixin"
+  "server": [
+    "cooldown.EnchantmentMixin",
+    "cooldown.ItemCooldownsMixin",
+    "portals.BaseFireBlockMixin",
+    "portals.EnderEyeItemMixin",
+    "portals.EndPortalBlockMixin",
+    "portals.NetherPortalBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
