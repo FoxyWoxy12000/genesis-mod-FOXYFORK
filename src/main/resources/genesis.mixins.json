@@ -3,7 +3,8 @@
   "package": "${group}.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "EnchantmentMixin"
+    "EnchantmentMixin",
+    "ItemCooldownsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
