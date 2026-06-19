@@ -2,6 +2,7 @@ package dev.d4vid.mods.genesis.server
 
 import dev.d4vid.mods.genesis.server.combat.registerFriendlyTeamManager
 import dev.d4vid.mods.genesis.server.combat.registerInCombatDetector
+import dev.d4vid.mods.genesis.server.limit.registerInventoryLimitEnforcer
 import dev.d4vid.mods.genesis.server.recipe.registerRecipeDisabler
 import dev.d4vid.mods.genesis.server.resourcePack.ResourcePackPlayerData
 import dev.d4vid.mods.genesis.server.resourcePack.registerResourcePackLoader
@@ -20,6 +21,7 @@ object Genesis : DedicatedServerModInitializer {
         registerInCombatDetector()
         registerResourcePackLoader()
         registerRecipeDisabler()
+        registerInventoryLimitEnforcer()
 
         GenesisConfig.loadFile()
         ResourcePackPlayerData.load()

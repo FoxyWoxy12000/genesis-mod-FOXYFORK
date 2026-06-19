@@ -33,5 +33,120 @@
     "withResult": [
       "minecraft:mace"
     ]
+  },
+  "itemLimits": {
+    "checkBundles": true,
+    "checkShulkers": false,
+    "limits": [
+      {
+        "material": "minecraft:experience_bottle",
+        "limit": 64
+      },
+      {
+        "material": "minecraft:cobweb",
+        "limit": 64
+      }
+    ],
+    "groups": [
+      {
+        "limit": 32,
+        "items": [
+          {
+            "material": "minecraft:wind_charge",
+            "scaling": 8
+          },
+          {
+            "material": "minecraft:breeze_rod",
+            "scaling": 1
+          }
+        ]
+      },
+      {
+        "limit": 1,
+        "items": [
+          {
+            "material": "minecraft:potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:long_turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:strong_turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:splash_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:splash_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:long_turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:splash_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:strong_turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:lingering_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:lingering_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:long_turtle_master"
+              }
+            },
+            "scaling": 1
+          },
+          {
+            "material": "minecraft:lingering_potion",
+            "nbt": {
+              "minecraft:potion_contents": {
+                "potion": "minecraft:strong_turtle_master"
+              }
+            },
+            "scaling": 1
+          }
+        ]
+      }
+    ]
   }
 }

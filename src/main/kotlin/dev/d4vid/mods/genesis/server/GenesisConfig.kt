@@ -4,6 +4,7 @@ import dev.d4vid.mods.genesis.server.Genesis.logger
 import dev.d4vid.mods.genesis.server.cooldown.CooldownType
 import dev.d4vid.mods.genesis.server.serialization.DurationSecondsSerializer
 import dev.d4vid.mods.genesis.server.serialization.EnumMapSerializer
+import dev.d4vid.mods.genesis.server.serialization.GsonElementSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import net.minecraft.core.registries.BuiltInRegistries
@@ -24,73 +25,81 @@ private object CooldownsSerializer : EnumMapSerializer<CooldownType, CooldownDat
 private data class CooldownData(
     @Serializable(with = DurationSecondsSerializer::class)
     val duration: Duration,
-    val combatOnly: Boolean,
+    val combatOnly: Boolean = false,
 )
 
 @Serializable
 private data class CombatDetectionData(
-    val minDamage: Double,
-    val damageScaling: Double,
-    val maxTimer: Double,
-    val combatLog: Boolean,
-    val disableItems: Set<String>,
+    val minDamage: Double = 0.0,
+    val damageScaling: Double = 1.0,
+    val maxTimer: Double = 30.0,
+    val combatLog: Boolean = false,
+    val disableItems: Set<String> = setOf(),
 )
 
 @Serializable
 private data class ResourcePackData(
-    val url: String,
-    val sha1: String,
-    val prompt: String,
-    val kickOnDecline: Boolean,
+    val url: String = "",
+    val sha1: String = "",
+    val prompt: String = "Please accept the resource pack.",
+    val kickOnDecline: Boolean = false,
 )
 
 @Serializable
 private data class DisableRecipesData(
-    val using: Set<String>,
-    val withResult: Set<String>,
+    val using: Set<String> = setOf(),
+    val withResult: Set<String> = setOf(),
+)
+
+@Serializable
+data class ItemLimitData(
+    val material: String,
+    @Serializable(with = GsonElementSerializer::class)
+    val nbt: com.google.gson.JsonElement? = null,
+    val limit: Int,
+)
+
+@Serializable
+data class ItemGroupLimitData(
+    val material: String,
+    @Serializable(with = GsonElementSerializer::class)
+    val nbt: com.google.gson.JsonElement? = null,
+    val scaling: Int,
+)
+
+@Serializable
+data class ItemGroupData(
+    val limit: Int,
+    val items: List<ItemGroupLimitData>
+)
+
+@Serializable
+private data class ItemLimitsData(
+    val checkBundles: Boolean = false,
+    val checkShulkers: Boolean = false,
+    val limits: List<ItemLimitData> = listOf(),
+    val groups: List<ItemGroupData> = listOf(),
 )
 
 @Serializable
 private data class ConfigData(
-    val disableNether: Boolean,
-    val disableEnd: Boolean,
-    val disableTotemDeathProtection: Boolean,
-    val friendlyTeams: Set<String>,
+    val disableNether: Boolean = false,
+    val disableEnd: Boolean = false,
+    val disableTotemDeathProtection: Boolean = false,
+    val friendlyTeams: Set<String> = setOf(),
     @Serializable(with = CooldownsSerializer::class)
-    val cooldowns: EnumMap<CooldownType, CooldownData>,
-    val combatDetection: CombatDetectionData,
-    val resourcePack: ResourcePackData,
-    val disableRecipes: DisableRecipesData,
+    val cooldowns: EnumMap<CooldownType, CooldownData> = EnumMap(CooldownType::class.java),
+    val combatDetection: CombatDetectionData = CombatDetectionData(),
+    val resourcePack: ResourcePackData = ResourcePackData(),
+    val disableRecipes: DisableRecipesData = DisableRecipesData(),
+    val itemLimits: ItemLimitsData = ItemLimitsData(),
 )
 
 object GenesisConfig {
     const val RESOURCE = "/config.json"
     const val PATH = "./config/genesis.json"
 
-    private var data = ConfigData(
-        disableNether = false,
-        disableEnd = false,
-        disableTotemDeathProtection = false,
-        friendlyTeams = setOf(),
-        cooldowns = EnumMap(CooldownType::class.java),
-        combatDetection = CombatDetectionData(
-            minDamage = 1.0,
-            damageScaling = 10.0,
-            maxTimer = 30.0,
-            combatLog = true,
-            disableItems = setOf(),
-        ),
-        resourcePack = ResourcePackData(
-            url = "",
-            sha1 = "",
-            prompt = "This Server Requires A Resource Pack To Function, On Decline You WILL BE KICKED, also your choice will be remembered",
-            kickOnDecline = true,
-        ),
-        disableRecipes = DisableRecipesData(
-            using = setOf(),
-            withResult = setOf(),
-        ),
-    )
+    private var data = ConfigData()
 
     fun loadFile() {
         try {
@@ -137,6 +146,11 @@ object GenesisConfig {
 
     fun isRecipeDisabledForInput(item: Item): Boolean = data.disableRecipes.using.contains(getItemKey(item))
     fun isRecipeDisabledForResult(item: Item): Boolean = data.disableRecipes.withResult.contains(getItemKey(item))
+
+    fun shouldItemLimitsCheckBundles(): Boolean = data.itemLimits.checkBundles
+    fun shouldItemLimitsCheckShulkers(): Boolean = data.itemLimits.checkShulkers
+    fun getItemLimits(): List<ItemLimitData> = data.itemLimits.limits
+    fun getItemLimitGroups(): List<ItemGroupData> = data.itemLimits.groups
 }
 
 private fun getItemKey(item: Item): String {
