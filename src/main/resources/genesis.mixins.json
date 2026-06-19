@@ -10,7 +10,8 @@
     "portals.BaseFireBlockMixin",
     "portals.EnderEyeItemMixin",
     "portals.EndPortalBlockMixin",
-    "portals.NetherPortalBlockMixin"
+    "portals.NetherPortalBlockMixin",
+    "resourcePack.ResourcePackResponseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

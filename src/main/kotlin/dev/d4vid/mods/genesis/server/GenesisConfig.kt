@@ -5,6 +5,7 @@ import dev.d4vid.mods.genesis.server.cooldown.CooldownType
 import dev.d4vid.mods.genesis.server.serialization.DurationSecondsSerializer
 import dev.d4vid.mods.genesis.server.serialization.EnumMapSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
@@ -44,6 +45,16 @@ private data class ConfigData(
     @Serializable(with = CooldownsSerializer::class)
     val cooldowns: EnumMap<CooldownType, CooldownData>,
     val combatDetection: CombatDetectionData,
+    @SerialName("ResourcePackStuff")
+    val resourcePack: ResourcePackStuff,
+)
+
+@Serializable
+private data class ResourcePackStuff(
+    val Url: String,
+    val Sha1: String,
+    val KickOnDecline: Boolean,
+    val Prompt: String
 )
 
 object GenesisConfig {
@@ -61,6 +72,12 @@ object GenesisConfig {
             maxTimer = 30.0,
             combatLog = true,
             disableItems = setOf(),
+        ),
+        resourcePack = ResourcePackStuff(
+            Url = "",
+            Sha1 = "",
+            KickOnDecline = true,
+            Prompt = "This Server Requires A Resource Pack To Function, On Decline You WILL BE KICKED, also your choice will be remembered"
         ),
     )
 
@@ -128,4 +145,9 @@ object GenesisConfig {
         println(id)
         return data.combatDetection.disableItems.contains(id)
     }
+
+    fun getResourcePackUrl(): String = data.resourcePack.Url
+    fun getResourcePackSha1(): String = data.resourcePack.Sha1
+    fun isResourcePackKickOnDecline(): Boolean = data.resourcePack.KickOnDecline
+    fun getResourcePackPrompt(): String = data.resourcePack.Prompt
 }

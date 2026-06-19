@@ -6,6 +6,9 @@ import net.fabricmc.api.DedicatedServerModInitializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import dev.d4vid.mods.genesis.server.mixin.resourcePack.ResourcePackPlayerData
+
 @Suppress("unused")
 object Genesis : DedicatedServerModInitializer {
     const val MOD_ID = "genesis"
@@ -17,5 +20,9 @@ object Genesis : DedicatedServerModInitializer {
         registerInCombatDetector()
 
         GenesisConfig.loadFile()
+        registerResourcePackLoader()
+        ServerLifecycleEvents.SERVER_STARTED.register { server ->
+            ResourcePackPlayerData.load(server)
+        }
     }
 }

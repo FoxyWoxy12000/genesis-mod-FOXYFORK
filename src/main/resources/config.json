@@ -18,5 +18,11 @@
     "disableItems": [
       "minecraft:ender_pearl"
     ]
+  },
+  "ResourcePackStuff": {
+    "Url": "",
+    "Sha1": "",
+    "KickOnDecline" : true,
+    "Prompt" : "This Server Requires A Resource Pack To Function, On Decline You WILL BE KICKED, also your choice will be remembered"
   }
 }
