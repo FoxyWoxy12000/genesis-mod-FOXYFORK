@@ -45,6 +45,12 @@ private data class ResourcePackData(
 )
 
 @Serializable
+private data class DisableRecipesData(
+    val using: Set<String>,
+    val withResult: Set<String>,
+)
+
+@Serializable
 private data class ConfigData(
     val disableNether: Boolean,
     val disableEnd: Boolean,
@@ -53,6 +59,7 @@ private data class ConfigData(
     val cooldowns: EnumMap<CooldownType, CooldownData>,
     val combatDetection: CombatDetectionData,
     val resourcePack: ResourcePackData,
+    val disableRecipes: DisableRecipesData,
 )
 
 object GenesisConfig {
@@ -76,6 +83,10 @@ object GenesisConfig {
             sha1 = "",
             prompt = "This Server Requires A Resource Pack To Function, On Decline You WILL BE KICKED, also your choice will be remembered",
             kickOnDecline = true,
+        ),
+        disableRecipes = DisableRecipesData(
+            using = setOf(),
+            withResult = setOf(),
         ),
     )
 
@@ -139,13 +150,18 @@ object GenesisConfig {
     }
 
     fun isItemDisabledInCombat(item: Item): Boolean {
-        val id = BuiltInRegistries.ITEM.getKey(item).toString()
-        println(id)
-        return data.combatDetection.disableItems.contains(id)
+        return data.combatDetection.disableItems.contains(getItemKey(item))
     }
 
     fun getResourcePackUrl(): String = data.resourcePack.url
     fun getResourcePackSha1(): String = data.resourcePack.sha1
     fun getResourcePackPrompt(): String = data.resourcePack.prompt
     fun shouldKickOnResourcePackDecline(): Boolean = data.resourcePack.kickOnDecline
+
+    fun isRecipeDisabledForInput(item: Item): Boolean = data.disableRecipes.using.contains(getItemKey(item))
+    fun isRecipeDisabledForResult(item: Item): Boolean = data.disableRecipes.withResult.contains(getItemKey(item))
+}
+
+private fun getItemKey(item: Item): String {
+    return BuiltInRegistries.ITEM.getKey(item).toString()
 }

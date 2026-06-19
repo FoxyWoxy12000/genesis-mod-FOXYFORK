@@ -24,5 +24,13 @@
     "sha1": "",
     "prompt": "This Server Requires A Resource Pack To Function, On Decline You WILL BE KICKED, also your choice will be remembered",
     "kickOnDecline": true
+  },
+  "disableRecipes": {
+    "using": [
+      "minecraft:netherite_upgrade_smithing_template"
+    ],
+    "withResult": [
+      "minecraft:mace"
+    ]
   }
 }

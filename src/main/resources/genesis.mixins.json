@@ -7,6 +7,7 @@
     "cooldown.ItemCooldownsMixin",
     "event.EntityMixin",
     "event.ServerPlayerGameModeMixin",
+    "event.RecipeManagerMixin",
     "portals.BaseFireBlockMixin",
     "portals.EnderEyeItemMixin",
     "portals.EndPortalBlockMixin",
