@@ -19,7 +19,7 @@ fun registerCommand() {
 
 private fun command(): LiteralArgumentBuilder<CommandSourceStack> {
     return Commands.literal("genesis")
-        .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
+        //.requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
         .then(reloadCommand())
         .then(giveCommand())
         .then(protectionCommand())
@@ -37,7 +37,7 @@ private fun reloadCommand(): LiteralArgumentBuilder<CommandSourceStack> {
 
 private fun giveCommand(): LiteralArgumentBuilder<CommandSourceStack> {
     val command = Commands.literal("give")
-
+        .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
     CustomItems.REGISTERY.forEach { name, item ->
         command.then(
             Commands.literal(name)

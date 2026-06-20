@@ -27,13 +27,9 @@ public class PlayerMixin {
 
         if (attacker instanceof ServerPlayer serverAttacker &&
             PvpProtectionData.INSTANCE.isProtected(serverAttacker.getUUID())) {
-            long millisLeft = PvpProtectionData.INSTANCE.getTimeLeft(serverAttacker.getUUID());
-            long minutesLeft = millisLeft / 60000;
-            long secondsLeft = (millisLeft % 60000) / 1000;
-            String timeStr = minutesLeft + "m " + secondsLeft + "s";
 
             serverAttacker.sendSystemMessage(
-                Component.literal("You cannot attack while protected for " + timeStr)
+                Component.literal("You cannot attack while protected. Run /genesis protection disable to remove it.")
                     .withStyle(ChatFormatting.RED), true
             );
 
@@ -49,7 +45,7 @@ public class PlayerMixin {
             String timeStr = minutesLeft + "m" + secondsLeft + "s ";
 
             ((ServerPlayer) attacker).sendSystemMessage(
-                Component.literal(victim.getName().getString() + "is protected for " + timeStr)
+                Component.literal(victim.getName().getString() + " is protected for " + timeStr)
                     .withStyle(ChatFormatting.RED), true
             );
 
