@@ -1,6 +1,7 @@
 package dev.d4vid.mods.genesis.server.item;
 
 import dev.d4vid.mods.genesis.server.item.items.Bloodlust;
+import dev.d4vid.mods.genesis.server.item.items.MegaDrill;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +14,7 @@ public class CustomItems {
 
     static {
         register(new Bloodlust());
+        register(new MegaDrill());
     }
 
     private static void register(CustomItem item) {
