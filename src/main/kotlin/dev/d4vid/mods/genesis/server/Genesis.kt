@@ -1,6 +1,5 @@
 package dev.d4vid.mods.genesis.server
 
-import dev.d4vid.mods.genesis.server.combat.registerFriendlyTeamManager
 import dev.d4vid.mods.genesis.server.combat.registerInCombatDetector
 import dev.d4vid.mods.genesis.server.limit.registerInventoryLimitEnforcer
 import dev.d4vid.mods.genesis.server.recipe.registerRecipeDisabler
@@ -17,7 +16,6 @@ object Genesis : DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
         registerCommand()
-        registerFriendlyTeamManager()
         registerInCombatDetector()
         registerResourcePackLoader()
         registerRecipeDisabler()

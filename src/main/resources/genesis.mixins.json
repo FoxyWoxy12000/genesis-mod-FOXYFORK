@@ -3,10 +3,11 @@
   "package": "${group}.server.mixin",
   "compatibilityLevel": "JAVA_21",
   "server": [
+    "combat.PlayerMixin",
     "cooldown.EnchantmentMixin",
     "cooldown.ItemCooldownsMixin",
-    "event.EntityMixin",
     "event.InventoryMixin",
+    "event.PlayerMixin",
     "event.ServerPlayerGameModeMixin",
     "event.RecipeManagerMixin",
     "event.ServerPlayerMixin",
