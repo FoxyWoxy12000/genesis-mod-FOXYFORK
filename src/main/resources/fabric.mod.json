@@ -5,7 +5,8 @@
   "name": "${name}",
   "description": "${description}",
   "authors": [
-    "David Malchin <malchin459@gmail.com>"
+    "David Malchin <malchin459@gmail.com>",
+    "FoxyWoxy"
   ],
   "contact": {
     "sources": "https://github.com/D4isDAVID/genesis-mod"
