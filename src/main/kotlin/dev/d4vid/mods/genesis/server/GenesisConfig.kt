@@ -6,6 +6,7 @@ import dev.d4vid.mods.genesis.server.serialization.DurationSecondsSerializer
 import dev.d4vid.mods.genesis.server.serialization.EnumMapSerializer
 import dev.d4vid.mods.genesis.server.serialization.GsonElementSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
