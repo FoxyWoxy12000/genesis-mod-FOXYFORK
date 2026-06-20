@@ -1,5 +1,6 @@
 package dev.d4vid.mods.genesis.server
 
+import dev.d4vid.mods.genesis.server.combat.PvpProtectionData
 import dev.d4vid.mods.genesis.server.combat.registerInCombatDetector
 import dev.d4vid.mods.genesis.server.limit.registerInventoryLimitEnforcer
 import dev.d4vid.mods.genesis.server.recipe.registerRecipeDisabler
@@ -21,7 +22,7 @@ object Genesis : DedicatedServerModInitializer {
         registerResourcePackLoader()
         registerRecipeDisabler()
         registerInventoryLimitEnforcer()
-
+        PvpProtectionData.load()
         GenesisConfig.loadFile()
         ResourcePackPlayerData.load()
         registerBloodlustKillTracker()
