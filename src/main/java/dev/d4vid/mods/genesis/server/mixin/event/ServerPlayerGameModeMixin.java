@@ -46,8 +46,13 @@ public class ServerPlayerGameModeMixin {
         }
     }
 
-    @Shadow
-    public ServerPlayer player;
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
+    private void genesis$destroyBlock(BlockPos blockPos, CallbackInfoReturnable<Boolean> callback) {
+        if (player.gameMode.getGameModeForPlayer() != GameType.SURVIVAL) {
+            return;
+        }
+
+        InteractionResult result = PlayerBlockDestroyCallback.Companion.getEVENT().invoker().interact(player, blockPos);
 
     @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
     private void genisis$destroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> info) {
