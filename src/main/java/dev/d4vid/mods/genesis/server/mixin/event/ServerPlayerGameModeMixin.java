@@ -1,5 +1,6 @@
 package dev.d4vid.mods.genesis.server.mixin.event;
 
+import dev.d4vid.mods.genesis.server.event.PlayerBlockDestroyCallback;
 import dev.d4vid.mods.genesis.server.event.PlayerItemUseCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,9 +11,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -21,6 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @SuppressWarnings("unused")
 @Mixin(ServerPlayerGameMode.class)
 public class ServerPlayerGameModeMixin {
+    @Shadow
+    protected ServerPlayer player;
+
     @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
     private void genesis$useItem(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, CallbackInfoReturnable<InteractionResult> callback) {
         InteractionResult result = PlayerItemUseCallback.Companion.getEVENT().invoker().interact(player, level, stack, hand, null);
@@ -41,13 +45,16 @@ public class ServerPlayerGameModeMixin {
         }
     }
 
-    public ServerPlayer player;
     @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    private void genisis$destroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> info) {
-        if (player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL) {
-            if (player.level().getBlockState(pos).is(Blocks.SPAWNER)) {
-                info.cancel();
-            }
+    private void genesis$destroyBlock(BlockPos blockPos, CallbackInfoReturnable<Boolean> callback) {
+        if (player.gameMode.getGameModeForPlayer() != GameType.SURVIVAL) {
+            return;
+        }
+
+        InteractionResult result = PlayerBlockDestroyCallback.Companion.getEVENT().invoker().interact(player, blockPos);
+
+        if (result != InteractionResult.PASS) {
+            callback.cancel();
         }
     }
 }

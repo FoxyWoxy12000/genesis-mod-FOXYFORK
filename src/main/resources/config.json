@@ -40,6 +40,9 @@
       "minecraft:mace"
     ]
   },
+  "unbreakableBlocks": [
+    "minecraft:spawner"
+  ],
   "itemLimits": {
     "checkBundles": true,
     "checkShulkers": false,

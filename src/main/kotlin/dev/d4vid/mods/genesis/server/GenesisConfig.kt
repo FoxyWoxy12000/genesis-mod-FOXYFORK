@@ -6,10 +6,10 @@ import dev.d4vid.mods.genesis.server.serialization.DurationSecondsSerializer
 import dev.d4vid.mods.genesis.server.serialization.EnumMapSerializer
 import dev.d4vid.mods.genesis.server.serialization.GsonElementSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.scores.Team
 import java.io.File
 import java.nio.file.Files
@@ -102,6 +102,7 @@ private data class ConfigData(
     val combatDetection: CombatDetectionData = CombatDetectionData(),
     val resourcePack: ResourcePackData = ResourcePackData(),
     val disableRecipes: DisableRecipesData = DisableRecipesData(),
+    val unbreakableBlocks: Set<String> = setOf(),
     val itemLimits: ItemLimitsData = ItemLimitsData(),
 )
 
@@ -151,15 +152,17 @@ object GenesisConfig {
     fun getCombatDetectionDamageScaling() = data.combatDetection.damageScaling
     fun getCombatDetectionMaxTimer() = data.combatDetection.maxTimer
     fun isCombatLogEnabled() = data.combatDetection.combatLog
-    fun isItemDisabledInCombat(item: Item) = data.combatDetection.disableItems.contains(getItemKey(item))
+    fun isItemDisabledInCombat(item: Item) = data.combatDetection.disableItems.contains(getKey(item))
 
     fun getResourcePackUrl(): String = data.resourcePack.url
     fun getResourcePackSha1(): String = data.resourcePack.sha1
     fun getResourcePackPrompt(): String = data.resourcePack.prompt
     fun shouldKickOnResourcePackDecline(): Boolean = data.resourcePack.kickOnDecline
 
-    fun isRecipeDisabledForInput(item: Item): Boolean = data.disableRecipes.using.contains(getItemKey(item))
-    fun isRecipeDisabledForResult(item: Item): Boolean = data.disableRecipes.withResult.contains(getItemKey(item))
+    fun isRecipeDisabledForInput(item: Item): Boolean = data.disableRecipes.using.contains(getKey(item))
+    fun isRecipeDisabledForResult(item: Item): Boolean = data.disableRecipes.withResult.contains(getKey(item))
+
+    fun isBlockUnbreakable(block: Block): Boolean = data.unbreakableBlocks.contains(getKey(block))
 
     fun shouldItemLimitsCheckBundles(): Boolean = data.itemLimits.checkBundles
     fun shouldItemLimitsCheckShulkers(): Boolean = data.itemLimits.checkShulkers
@@ -167,6 +170,10 @@ object GenesisConfig {
     fun getItemLimitGroups(): List<ItemGroupData> = data.itemLimits.groups
 }
 
-private fun getItemKey(item: Item): String {
+private fun getKey(item: Item): String {
     return BuiltInRegistries.ITEM.getKey(item).toString()
+}
+
+private fun getKey(block: Block): String {
+    return BuiltInRegistries.BLOCK.getKey(block).toString()
 }
