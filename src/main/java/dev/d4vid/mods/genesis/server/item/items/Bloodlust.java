@@ -49,12 +49,6 @@ public class Bloodlust implements CustomItem {
         enchantments.set(fire, 2);
         enchantments.set(loot, 3);
         enchantments.set(sweep, 3);
-
-        Holder<Enchantment> sharpness = registries.lookupOrThrow(Registries.ENCHANTMENT)
-            .getOrThrow(Enchantments.SHARPNESS);
-
-        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        enchantments.set(sharpness, 2);
         stack.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
 
         return stack;
@@ -108,8 +102,6 @@ public class Bloodlust implements CustomItem {
         enchantments.set(fire, 2);
         enchantments.set(loot, 3);
         enchantments.set(sweep, 3);
-        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        enchantments.set(sharpness, sharpnessLevel);
         stack.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
 
         if (kills == 1 || kills == 3 || kills == 5 || kills == 9) {
