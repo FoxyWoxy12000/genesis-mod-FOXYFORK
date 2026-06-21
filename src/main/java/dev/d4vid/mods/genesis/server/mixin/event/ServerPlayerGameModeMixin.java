@@ -54,12 +54,8 @@ public class ServerPlayerGameModeMixin {
 
         InteractionResult result = PlayerBlockDestroyCallback.Companion.getEVENT().invoker().interact(player, blockPos);
 
-    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    private void genisis$destroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> info) {
-        if (player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL) {
-            if (player.level().getBlockState(pos).is(Blocks.SPAWNER)) {
-                info.cancel();
-            }
+        if (result != InteractionResult.PASS) {
+            callback.cancel();
         }
     }
 }
