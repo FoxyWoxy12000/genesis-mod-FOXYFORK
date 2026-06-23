@@ -74,7 +74,7 @@ private fun protectionCommand(): LiteralArgumentBuilder<CommandSourceStack> {
 }
 
 private fun protectionEnableCommand(): LiteralArgumentBuilder<CommandSourceStack> {
-    return Commands.literal("disable")
+    return Commands.literal("enable")
         .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
         .then(
             Commands.argument("target", EntityArgument.player())
