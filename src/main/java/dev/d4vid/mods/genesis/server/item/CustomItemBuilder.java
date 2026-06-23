@@ -9,11 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Unit;
 
 public class CustomItemBuilder {
-    public static ItemStack build(Item baseItem, Component name, Identifier model) {
+    public static ItemStack build(Item baseItem, Component name, Identifier model, boolean unbreakable) {
         ItemStack stack = new ItemStack(baseItem);
         stack.set(DataComponents.ITEM_MODEL, model);
         stack.set(DataComponents.CUSTOM_NAME, name);
-        stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+        if (unbreakable) stack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
         return stack;
     }
 }

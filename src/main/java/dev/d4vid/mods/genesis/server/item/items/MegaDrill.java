@@ -12,9 +12,18 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.component.Tool;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.HolderSet;
+
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.List;
 
 public class MegaDrill implements CustomItem {
 
@@ -25,7 +34,7 @@ public class MegaDrill implements CustomItem {
             .withBold(true)
             .withColor(0x64C4FF)
         );
-        ItemStack stack = CustomItemBuilder.build(Items.NETHERITE_PICKAXE, name, getModel());
+        ItemStack stack = CustomItemBuilder.build(Items.NETHERITE_PICKAXE, name, getModel(), true);
 
         ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
@@ -38,6 +47,30 @@ public class MegaDrill implements CustomItem {
         enchantments.set(fortune, 3);
 
         stack.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
+
+        HolderSet<Block> pickaxeBlocks = registries.lookupOrThrow(Registries.BLOCK)
+            .getOrThrow(BlockTags.MINEABLE_WITH_PICKAXE);
+        HolderSet<Block> shovelBlocks = registries.lookupOrThrow(Registries.BLOCK)
+            .getOrThrow(BlockTags.MINEABLE_WITH_SHOVEL);
+        HolderSet<Block> axeBlocks = registries.lookupOrThrow(Registries.BLOCK)
+            .getOrThrow(BlockTags.MINEABLE_WITH_AXE);
+
+        Tool tool = new Tool(
+            List.of(
+                new Tool.Rule(pickaxeBlocks, Optional.of(9.0f), Optional.of(true)),
+                new Tool.Rule(shovelBlocks, Optional.of(9.0f), Optional.of(true)),
+                new Tool.Rule(axeBlocks, Optional.of(9.0f), Optional.of(true))
+            ),
+            1.0f,
+            1,
+            true
+        );
+        stack.set(DataComponents.TOOL, tool);
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.literal("Press [F] to toggle Silk Touch / Fortune").withStyle(s -> s
+            .withItalic(true).withColor(0x888888)));
+        stack.set(DataComponents.LORE, new ItemLore(lore));
 
         return stack;
     }

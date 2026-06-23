@@ -32,7 +32,7 @@ public class Bloodlust implements CustomItem {
             .withBold(true)
             .withColor(0xAA0000)
         );
-        ItemStack stack = CustomItemBuilder.build(Items.DIAMOND_SWORD, name, getModel());
+        ItemStack stack = CustomItemBuilder.build(Items.DIAMOND_SWORD, name, getModel(), true);
 
         ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
 
@@ -50,6 +50,15 @@ public class Bloodlust implements CustomItem {
         enchantments.set(loot, 3);
         enchantments.set(sweep, 3);
         stack.set(DataComponents.ENCHANTMENTS, enchantments.toImmutable());
+
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal("Gets stronger with kills").withStyle(s -> s
+            .withItalic(false).withBold(true).withColor(0xAA0000)));
+        lines.add(Component.literal("0 unique kills | Next level: 1").withStyle(s -> s
+            .withItalic(false).withColor(0xAA0000)));
+        lines.add(Component.literal("Fallen Souls: 0 | Run /genesis bloodlust kills").withStyle(s -> s
+            .withItalic(false).withColor(0x880000)));
+        stack.set(DataComponents.LORE, new ItemLore(lines));
 
         return stack;
     }
@@ -114,25 +123,36 @@ public class Bloodlust implements CustomItem {
             );
         }
         //System.out.println("Bloodlust tag on hit: " + tag);
-        updateLore(stack, kills);
+
+        ListTag namesList = tag.contains("killedNames")
+            ? tag.getList("killedNames").orElse(new ListTag())
+            : new ListTag();
+        namesList.add(StringTag.valueOf(killed.getName().getString()));
+        tag.put("killedNames", namesList);
+
+        updateLore(stack, kills, killedList, namesList);
         setData(stack, tag);
     }
-    private static void updateLore(ItemStack stack, int kills) {
+    private static void updateLore(ItemStack stack, int kills, ListTag killedList, ListTag namesList) {
         List<Component> lines = new ArrayList<>();
 
-        String killsText;
-        if (kills >= 9) {
-            killsText = "MAX Level";
-        } else {
-            int next = kills >= 5 ? 9 : kills >= 3 ? 5 : kills >= 1 ? 3 : 1;
-            killsText = kills + " unique kills | Next level: " + next;
-        }
 
-        lines.add(Component.literal(killsText).withStyle(s ->s
-            .withItalic(false)
-            .withColor(0xAA0000)
+        lines.add(Component.literal("Gets stronger with kills").withStyle(s -> s
+            .withItalic(false).withBold(true).withColor(0xAA0000)
         ));
 
+
+        String killsText = kills >= 9 ? "MAX Level"
+            : kills + " unique kills | Next level: " + (kills >= 5 ? 9 : kills >= 3 ? 5 : kills >= 1 ? 3 : 1);
+        lines.add(Component.literal(killsText).withStyle(s -> s
+            .withItalic(false).withColor(0xAA0000)
+        ));
+
+
+        lines.add(Component.literal("Fallen Souls: " + kills + " | Run /genesis bloodlust kills").withStyle(s -> s
+            .withItalic(false)
+            .withColor(0x880000)
+        ));
         stack.set(DataComponents.LORE, new ItemLore(lines));
     }
     @Override
