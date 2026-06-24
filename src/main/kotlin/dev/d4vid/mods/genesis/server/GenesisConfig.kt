@@ -135,8 +135,8 @@ object GenesisConfig {
         }
     }
 
-    fun isNetherDisabled() = data.disableEnd
-    fun isEndDisabled() = data.disableNether
+    fun isNetherDisabled() = data.disableNether
+    fun isEndDisabled() = data.disableEnd
 
     fun isTotemDeathProtectionDisabled() = data.disableTotemDeathProtection
 

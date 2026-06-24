@@ -2,8 +2,10 @@ package dev.d4vid.mods.genesis.server.item.items;
 
 import dev.d4vid.mods.genesis.server.item.CustomItem;
 import dev.d4vid.mods.genesis.server.item.CustomItemBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -12,8 +14,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -62,6 +62,7 @@ public class Bloodlust implements CustomItem {
 
         return stack;
     }
+
     @Override
     public Identifier getModel() {
         return Identifier.tryParse("genesis:bloodlust");
@@ -76,7 +77,7 @@ public class Bloodlust implements CustomItem {
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
-    public static void onKill(ItemStack stack,ServerPlayer attacker, ServerPlayer killed, RegistryAccess registries) {
+    public static void onKill(ItemStack stack, ServerPlayer attacker, ServerPlayer killed, RegistryAccess registries) {
         CompoundTag tag = getData(stack);
 
         ListTag killedList = tag.contains("killedPlayers")
@@ -155,6 +156,7 @@ public class Bloodlust implements CustomItem {
         ));
         stack.set(DataComponents.LORE, new ItemLore(lines));
     }
+
     @Override
     public String getCommandName() {
         return "bloodlust";

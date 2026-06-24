@@ -26,5 +26,7 @@ object Genesis : DedicatedServerModInitializer {
         GenesisConfig.loadFile()
 
         registerBloodlustKillTracker()
+
+        GenesisConfig.loadFile()
     }
 }
