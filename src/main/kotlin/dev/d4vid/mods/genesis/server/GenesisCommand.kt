@@ -2,11 +2,7 @@ package dev.d4vid.mods.genesis.server
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
-import com.mojang.brigadier.context.CommandContext
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 import dev.d4vid.mods.genesis.server.combat.PvpProtectionData
-import dev.d4vid.mods.genesis.server.item.CustomItem
-import dev.d4vid.mods.genesis.server.item.CustomItemSuggestionProvider
 import dev.d4vid.mods.genesis.server.item.CustomItems
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.commands.CommandSourceStack
@@ -31,11 +27,11 @@ private fun command(): LiteralArgumentBuilder<CommandSourceStack> {
 
 private fun reloadCommand(): LiteralArgumentBuilder<CommandSourceStack> {
     return Commands.literal("reload")
-        .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
+        .requires { source -> !source.isPlayer }
         .executes { _ ->
             GenesisConfig.loadFile()
 
-            Command.SINGLE_SUCCESS
+            0
         }
 }
 
@@ -48,31 +44,29 @@ private fun giveCommand(): LiteralArgumentBuilder<CommandSourceStack> {
                 .executes { ctx ->
                     val player = ctx.source.playerOrException
                     player.inventory.add(item.create(player.level().registryAccess()))
-
-                    Command.SINGLE_SUCCESS
+                    0
                 }
                 .then(
                     Commands.argument("target", EntityArgument.player())
-                        .executes { context ->
-                            val player = EntityArgument.getPlayer(context, "target")
-                            val item = getItemFromArg(context, "item")
-
-                            player.inventory.add(item.create(player.level().registryAccess()))
-
-                            Command.SINGLE_SUCCESS
+                        .executes { ctx ->
+                            val target = EntityArgument.getPlayer(ctx, "target")
+                            target.inventory.add(item.create(target.level().registryAccess()))
+                            0
                         }
                 )
         )
+    }
+    return command
 }
 
 private fun protectionCommand(): LiteralArgumentBuilder<CommandSourceStack> {
     return Commands.literal("protection")
-        .then(protectionEnableCommand())
-        .then(protectionDisableCommand())
+        .then(disableOwnProtectionCommand())
+        .then(adminProtectionCommand())
 }
 
-private fun protectionEnableCommand(): LiteralArgumentBuilder<CommandSourceStack> {
-    return Commands.literal("disable")
+private fun adminProtectionCommand(): LiteralArgumentBuilder<CommandSourceStack> {
+    return Commands.literal("admin")
         .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
         .then(Commands.literal("on")
             .then(Commands.argument("target", EntityArgument.player())
@@ -96,41 +90,17 @@ private fun protectionEnableCommand(): LiteralArgumentBuilder<CommandSourceStack
         )
 }
 
-private fun protectionDisableCommand(): LiteralArgumentBuilder<CommandSourceStack> {
+private fun disableOwnProtectionCommand(): LiteralArgumentBuilder<CommandSourceStack> {
     return Commands.literal("disable")
-        .executes { context ->
-            val player = context.source.playerOrException
-
+        .requires { source -> source.isPlayer }
+        .executes { ctx ->
+            val player = ctx.source.playerOrException
             if (!PvpProtectionData.isProtected(player.uuid)) {
                 ctx.source.sendFailure(Component.literal("You wern't protected to begin with gangalang."))
             } else  {
                 PvpProtectionData.removeProtection(player.uuid)
-                context.source.sendSuccess({ Component.literal("Your combat protection has been disabled.") }, false)
+                ctx.source.sendSuccess({ Component.literal("Your protection has been disabled.") }, false)
             }
-
-            Command.SINGLE_SUCCESS
+            0
         }
-        .then(
-            Commands.argument("target", EntityArgument.player())
-                .requires { source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER) }
-                .executes { context ->
-                    val target = EntityArgument.getPlayer(context, "target")
-
-                    PvpProtectionData.grantProtection(target.uuid)
-                    context.source.sendSuccess(
-                        { Component.literal("Granted combat protection to ${target.name.string}.") },
-                        false
-                    )
-
-                    Command.SINGLE_SUCCESS
-                }
-        )
-}
-
-private val UNKNOWN_CUSTOM_ITEM = SimpleCommandExceptionType(Component.literal("Unknown custom item."))
-
-private fun getItemFromArg(context: CommandContext<*>, name: String): CustomItem {
-    val itemName = StringArgumentType.getString(context, name)
-
-    return CustomItems.REGISTERY[itemName] ?: throw UNKNOWN_CUSTOM_ITEM.create()
 }
