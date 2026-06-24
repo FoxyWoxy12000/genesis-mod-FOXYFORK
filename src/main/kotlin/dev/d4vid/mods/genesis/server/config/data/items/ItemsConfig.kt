@@ -14,6 +14,7 @@ data class ItemsConfig(
     val disableTotemDeathProtection: Boolean = true,
     private val disableUsage: List<ItemsDisableUsageConfig> = listOf(
         ItemsDisableUsageConfig(NbtMatcher(Identifier.withDefaultNamespace("ender_pearl")), true),
+        ItemsDisableUsageConfig(NbtMatcher(Identifier.withDefaultNamespace("trident")), true),
     ),
     private val discard: Set<ItemMatcher> = setOf(
         NbtMatcher(Identifier.withDefaultNamespace("elytra")),
