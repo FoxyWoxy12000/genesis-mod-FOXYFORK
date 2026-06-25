@@ -1,5 +1,5 @@
 {
-  "disableNether": true,
+  "disableNether": false,
   "disableEnd": true,
   "disableTotemDeathProtection": true,
   "friendlyTeams": [
@@ -37,8 +37,7 @@
       "minecraft:netherite_upgrade_smithing_template"
     ],
     "withResult": [
-      "minecraft:mace",
-      "minecraft:filled_map"
+      "minecraft:mace"
     ]
   },
   "unbreakableBlocks": [
@@ -47,6 +46,14 @@
   "itemLimits": {
     "checkBundles": true,
     "checkShulkers": false,
+    "discard": [
+      "minecraft:elytra",
+      "minecraft:netherite_helmet",
+      "minecraft:netherite_chestplate",
+      "minecraft:netherite_leggings",
+      "minecraft:netherite_boots",
+      "minecraft:netherite_sword"
+    ],
     "limits": [
       {
         "material": "minecraft:experience_bottle",

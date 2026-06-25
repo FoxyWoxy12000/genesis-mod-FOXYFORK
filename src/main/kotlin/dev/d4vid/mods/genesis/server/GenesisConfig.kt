@@ -88,6 +88,7 @@ data class ItemGroupData(
 private data class ItemLimitsData(
     val checkBundles: Boolean = false,
     val checkShulkers: Boolean = false,
+    val discard: Set<String> = setOf(),
     val limits: List<ItemLimitData> = listOf(),
     val groups: List<ItemGroupData> = listOf(),
 )
@@ -169,6 +170,7 @@ object GenesisConfig {
     fun shouldItemLimitsCheckShulkers(): Boolean = data.itemLimits.checkShulkers
     fun getItemLimits(): List<ItemLimitData> = data.itemLimits.limits
     fun getItemLimitGroups(): List<ItemGroupData> = data.itemLimits.groups
+    fun shouldDiscardItem(item: Item): Boolean = data.itemLimits.discard.contains(getKey(item))
 }
 
 private fun getKey(item: Item): String {

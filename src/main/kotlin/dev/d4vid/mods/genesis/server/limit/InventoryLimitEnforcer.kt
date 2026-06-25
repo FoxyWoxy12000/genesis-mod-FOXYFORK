@@ -24,10 +24,12 @@ private val overLimit = mutableSetOf<UUID>()
 
 fun registerInventoryLimitEnforcer() {
     PlayerInventoryInteractCallback.EVENT.register { player ->
+        discardItems(player)
         enforceInventoryLimits(player)
     }
 
     ServerPlayConnectionEvents.JOIN.register { listener, _, _ ->
+        discardItems(listener.player)
         enforceInventoryLimits(listener.player)
     }
 
@@ -37,6 +39,18 @@ fun registerInventoryLimitEnforcer() {
 
             player?.addEffect(MobEffectInstance(MobEffects.SLOWNESS, 20, 4))
             player?.addEffect(MobEffectInstance(MobEffects.BLINDNESS, 30, 0))
+        }
+    }
+}
+
+private fun discardItems(player: ServerPlayer) {
+    val inventory = player.inventory
+
+    for (i in 0..<inventory.containerSize) {
+        val stack = inventory.getItem(i).item
+
+        if (GenesisConfig.shouldDiscardItem(stack)) {
+            inventory.setItem(i, ItemStack.EMPTY)
         }
     }
 }

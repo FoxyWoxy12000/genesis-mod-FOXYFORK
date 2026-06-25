@@ -6,7 +6,6 @@ import net.minecraft.world.InteractionResult
 
 fun registerRecipeDisabler() {
     RecipeAssembleCallback.EVENT.register { input, result ->
-        println(result)
         if (GenesisConfig.isRecipeDisabledForResult(result.item)) {
             return@register InteractionResult.FAIL
         }

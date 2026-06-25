@@ -18,6 +18,7 @@ object Genesis : DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
         registerCommand()
+        registerBlockDestroyPrevention()
         registerInCombatDetector()
         registerResourcePackLoader()
         registerRecipeDisabler()
