@@ -49,6 +49,8 @@ tasks.processResources {
 }
 
 tasks.jar {
+    dependsOn("resourcePack")
+
     from("LICENSE") {
         rename { "${it}_${rootProject.name}" }
     }
@@ -56,4 +58,30 @@ tasks.jar {
 
 tasks.remapJar {
     archiveFileName = "${rootProject.name}.jar"
+}
+
+tasks.runServer {
+    dependsOn("resourcePack")
+
+    doFirst {
+        val python = if (System.getProperty("os.name").lowercase().contains("win")) "py" else "python3"
+        val server = ProcessBuilder(
+            python, "-m", "http.server", "4000",
+            "--directory", file("build/libs").absolutePath
+        ).inheritIO().start()
+
+        Runtime.getRuntime().addShutdownHook(Thread {
+            server.destroy()
+        })
+    }
+}
+
+tasks.register<Zip>("resourcePack") {
+    description = "Packages the resource pack."
+
+    archiveFileName.set("GenesisPack.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+
+    from("src/resourcePack")
+    from("LICENSE")
 }

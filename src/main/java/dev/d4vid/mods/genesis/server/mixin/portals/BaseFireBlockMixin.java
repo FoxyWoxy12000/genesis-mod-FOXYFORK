@@ -1,6 +1,7 @@
 package dev.d4vid.mods.genesis.server.mixin.portals;
 
-import dev.d4vid.mods.genesis.server.GenesisConfig;
+import dev.d4vid.mods.genesis.server.event.GenesisPortalEvents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,8 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BaseFireBlockMixin {
     @Inject(method = "inPortalDimension", at = @At("HEAD"), cancellable = true)
     private static void genesis$inPortalDimension(Level level, CallbackInfoReturnable<Boolean> callback) {
-        if (GenesisConfig.INSTANCE.isNetherDisabled()) {
-            callback.setReturnValue(level.dimension() == Level.NETHER);
+        boolean result = GenesisPortalEvents.INSTANCE.getALLOW_NETHER().invoker().allowNether((ServerLevel) level);
+
+        if (!result) {
+            callback.setReturnValue(false);
         }
     }
 }

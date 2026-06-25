@@ -1,6 +1,6 @@
 package dev.d4vid.mods.genesis.server.mixin.portals;
 
-import dev.d4vid.mods.genesis.server.GenesisConfig;
+import dev.d4vid.mods.genesis.server.event.GenesisPortalEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -15,8 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EndPortalBlock.class)
 public class EndPortalBlockMixin {
     @Inject(method = "getPortalDestination", at = @At("HEAD"), cancellable = true)
-    private void genesis$getPortalDestination(ServerLevel serverLevel, Entity entity, BlockPos blockPos, CallbackInfoReturnable<TeleportTransition> callback) {
-        if (serverLevel.dimension() == ServerLevel.OVERWORLD && GenesisConfig.INSTANCE.isEndDisabled()) {
+    private void genesis$getPortalDestination(ServerLevel level, Entity entity, BlockPos blockPos, CallbackInfoReturnable<TeleportTransition> callback) {
+        boolean result = GenesisPortalEvents.INSTANCE.getALLOW_END().invoker().allowEnd(level);
+
+        if (!result) {
             callback.setReturnValue(null);
         }
     }
