@@ -1,19 +1,20 @@
 package dev.d4vid.mods.genesis.server.event
 
 import net.fabricmc.fabric.api.event.EventFactory
+import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.entity.TamableAnimal
+import net.minecraft.world.item.alchemy.Potion
 
 object GenesisCombatEvents {
-    val ALLOW_ARROW_EFFECT = EventFactory.createArrayBacked(AllowArrowEffect::class.java) { listeners ->
-        AllowArrowEffect { effect ->
+    val ALLOW_ARROW_POTION = EventFactory.createArrayBacked(AllowArrowPotion::class.java) { listeners ->
+        AllowArrowPotion { potion ->
             for (listener in listeners) {
-                val result = listener.allowArrowEffect(effect)
+                val result = listener.allowArrowPotion(potion)
 
                 if (!result) {
-                    return@AllowArrowEffect false
+                    return@AllowArrowPotion false
                 }
             }
 
@@ -80,8 +81,8 @@ object GenesisCombatEvents {
             }
         }
 
-    fun interface AllowArrowEffect {
-        fun allowArrowEffect(effect: MobEffectInstance): Boolean
+    fun interface AllowArrowPotion {
+        fun allowArrowPotion(potion: Holder<Potion>): Boolean
     }
 
     fun interface AllowPetDamage {
