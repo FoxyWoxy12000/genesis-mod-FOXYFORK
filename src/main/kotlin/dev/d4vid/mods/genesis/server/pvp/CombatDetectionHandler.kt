@@ -38,7 +38,7 @@ class CombatDetectionHandler(private val config: GenesisConfig) {
             if (attacker is AbstractArrow) {
                 attacker = attacker.owner
             }
-            if (attacker !is ServerPlayer) {
+            if (attacker !is ServerPlayer || victim.uuid == attacker.uuid) {
                 return@register
             }
 

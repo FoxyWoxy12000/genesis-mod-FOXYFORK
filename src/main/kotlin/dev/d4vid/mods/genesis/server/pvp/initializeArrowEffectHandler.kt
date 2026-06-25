@@ -5,8 +5,6 @@ import dev.d4vid.mods.genesis.server.event.GenesisCombatEvents
 
 fun initializeArrowEffectHandler(config: GenesisConfig) {
     GenesisCombatEvents.ALLOW_ARROW_EFFECT.register {
-        println(it)
-        println(config.data.pvp.isArrowEffectDisabled(it))
         !config.data.pvp.isArrowEffectDisabled(it)
     }
 }
