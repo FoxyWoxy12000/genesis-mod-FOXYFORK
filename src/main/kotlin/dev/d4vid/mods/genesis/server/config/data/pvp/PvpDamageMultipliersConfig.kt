@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PvpDamageMultipliersConfig(
-    val minecartTntExplosion: Float = 1F,
-    val endCrystalExplosion: Float = 1F,
-    val respawnAnchorExplosion: Float = 1F,
+    val minecartTntExplosion: Float = 0.25F,
+    val endCrystalExplosion: Float = 0.25F,
+    val respawnAnchorExplosion: Float = 0.25F,
 )
